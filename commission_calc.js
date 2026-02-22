@@ -2,12 +2,12 @@
  * Sample KPI Script: Sales Commission Calculator
  * 
  * This script demonstrates how to calculate commission based on:
- * 1. Request Attributes (salesAmount, targetAmount)
+ * 1. Request Params (salesAmount, targetAmount)
  * 2. Default Configuration (baseRate) which can be overridden
  * 3. Business Logic (Standard Rate vs Bonus Rate)
  * 
  * Usage Context:
- * - 'request': Passed by the KpiProcessor. Contains .kpiName, .cadence, .level, .attributes
+ * - 'request': Passed by the KpiProcessor. Contains .kpiName, .cadence, .level, .params
  * - 'kpiResultClass': The Java class to instantiate for the return value
  */
 
@@ -19,16 +19,16 @@ if (request.cadence) result.cadence = request.cadence;
 if (request.level) result.level = request.level;
 
 // 2. Extract Logic Inputs
-// These attributes come from the merged map of (DB extended_attr + API request attributes)
-var attributes = request.attributes;
+// These params come from the merged map of (DB def.params + API request.params)
+var params = request.params;
 
 // 'salesAmount' and 'targetAmount' come from the API Request payload
-var sales = attributes.get("salesAmount") || 0.0;
-var target = attributes.get("targetAmount") || 10000.0;
+var sales = params.get("salesAmount") || 0.0;
+var target = params.get("targetAmount") || 10000.0;
 
-// 'baseRate' can be defined in 'extended_attr' as a default (e.g., 0.04)
+// 'baseRate' can be defined in DB 'params' as a default (e.g., 0.04)
 // It can also be overridden by the API request
-var rate = attributes.get("baseRate") || 0.05;
+var rate = params.get("baseRate") || 0.05;
 
 // 3. Perform Business Logic
 var commission = sales * rate;
